@@ -1,5 +1,7 @@
 package com.dev.auth.server.config;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -14,6 +16,8 @@ public class JwtTokenCustomizer {
             context.getClaims().claim("client_id",
                     context.getRegisteredClient().getClientId());
             context.getClaims().claim("roles", "SERVICE");
+            // 👇 audience add
+            context.getClaims().audience(List.of("resource-server"));
         };
     }
 }

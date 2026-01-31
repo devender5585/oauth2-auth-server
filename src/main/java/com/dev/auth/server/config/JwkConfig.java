@@ -6,6 +6,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -20,9 +21,14 @@ import com.nimbusds.jose.proc.SecurityContext;
 @Configuration
 public class JwkConfig {
 
+	@Value("${auth.issuer}")
+	private String issuer;
+	
 	@Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().build();
+        return AuthorizationServerSettings.builder()
+        		.issuer(issuer)
+        		.build();
     }  //This enables endpoints such as /oauth2/token and /oauth2/jwks.
 	
 	@Bean
