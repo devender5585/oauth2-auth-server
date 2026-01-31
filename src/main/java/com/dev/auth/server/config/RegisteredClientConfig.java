@@ -1,6 +1,8 @@
 package com.dev.auth.server.config;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
@@ -27,7 +29,9 @@ public class RegisteredClientConfig {
 
 	    RegisteredClient client = RegisteredClient.withId(UUID.randomUUID().toString())
 	            .clientId("client-app")
+	            .clientName("Client Application")
 	            .clientSecret(passwordEncoder.encode("client-secret"))
+	            .clientSecretExpiresAt(Instant.now().plus(365, ChronoUnit.DAYS)) // 🔥 VERY IMPORTANT
 	            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 	            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 	            .scope("read")
