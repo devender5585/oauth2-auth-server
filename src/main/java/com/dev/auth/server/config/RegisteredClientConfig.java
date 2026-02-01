@@ -20,6 +20,17 @@ import org.springframework.security.oauth2.server.authorization.settings.TokenSe
 @Configuration
 public class RegisteredClientConfig {
 
+	/*
+	 * Added startup-time OAuth2 client registration using
+	 * JdbcRegisteredClientRepository. This is intended for learning and demo
+	 * purposes only.
+	 * 
+	 * - Registers a demo client (client-app) with client_credentials grant 
+	 * - Prevents duplicate registration by checking existing client_id 
+	 * - Uses short-lived access tokens and secret expiry 
+	 * - In production, client provisioning should be handled via DB/admin tooling
+	 */
+		
 	@Bean
 	public RegisteredClientRepository registeredClientRepository(
 	        JdbcTemplate jdbcTemplate,
@@ -40,7 +51,9 @@ public class RegisteredClientConfig {
 	            .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofMinutes(30)).build())
 	            .build();
 
-	    repository.save(client);
+	    if(repository.findByClientId("client-app") ==null) {
+	    	repository.save(client);
+	    }
 
 	    return repository;
 	}
