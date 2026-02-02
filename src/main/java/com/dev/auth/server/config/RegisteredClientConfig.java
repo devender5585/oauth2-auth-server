@@ -1,25 +1,34 @@
 package com.dev.auth.server.config;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
 @Configuration
 public class RegisteredClientConfig {
 
+	
+	@Bean
+	public RegisteredClientRepository registeredClientRepository(
+	        JdbcTemplate jdbcTemplate) {
+
+	    return new JdbcRegisteredClientRepository(jdbcTemplate);
+	}
+	
+	
+	@Bean
+    public OAuth2AuthorizationService authorizationService(
+            JdbcTemplate jdbcTemplate, 
+            RegisteredClientRepository registeredClientRepository) {
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    }
+	
+	
+	
 	/*
 	 * Added startup-time OAuth2 client registration using
 	 * JdbcRegisteredClientRepository. This is intended for learning and demo
@@ -31,7 +40,7 @@ public class RegisteredClientConfig {
 	 * - In production, client provisioning should be handled via DB/admin tooling
 	 */
 		
-	@Bean
+/**	@Bean
 	public RegisteredClientRepository registeredClientRepository(
 	        JdbcTemplate jdbcTemplate,
 	        PasswordEncoder passwordEncoder) {
@@ -42,7 +51,7 @@ public class RegisteredClientConfig {
 	            .clientId("client-app")
 	            .clientName("Client Application")
 	            .clientSecret(passwordEncoder.encode("client-secret"))
-	            .clientSecretExpiresAt(Instant.now().plus(365, ChronoUnit.DAYS)) // 🔥 VERY IMPORTANT
+	            .clientSecretExpiresAt(Instant.now().plus(365, ChronoUnit.DAYS))
 	            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 	            .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 	            .scope("read")
@@ -54,9 +63,8 @@ public class RegisteredClientConfig {
 	    if(repository.findByClientId("client-app") ==null) {
 	    	repository.save(client);
 	    }
-
 	    return repository;
-	}
+	}*/
 	
 	/**    @Bean
     public RegisteredClientRepository registeredClientRepository(
