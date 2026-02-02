@@ -108,7 +108,7 @@ Client Application
 Example claims issued by the Authorization Server:
 
 {
-  "iss": "http://localhost:8080",
+  "iss": "http://localhost:9000",
   "aud": ["resource-server"],
   "client_id": "client-app",
   "roles": ["SERVICE"],
@@ -128,7 +128,7 @@ Example claims issued by the Authorization Server:
 mvn spring-boot:run
 
 Server runs at:
-http://localhost:8080
+http://localhost:9000
 
 ---
 
